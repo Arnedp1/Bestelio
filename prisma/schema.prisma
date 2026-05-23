@@ -1,0 +1,297 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Tenant {
+  id        String   @id @default(cuid())
+  slug      String   @unique
+  name      String
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  domains            TenantDomain[]
+  users              TenantUser[]
+  brandSettings      BrandSettings?
+  businessSettings   BusinessSettings?
+  featureFlags       FeatureFlag[]
+  categories         Category[]
+  products           Product[]
+  openingHours       OpeningHour[]
+  closingExceptions  ClosingException[]
+  timeSlotRules      TimeSlotRule[]
+  timeSlotInstances  TimeSlotInstance[]
+  orders             Order[]
+}
+
+model TenantDomain {
+  id        String   @id @default(cuid())
+  hostname  String   @unique
+  isPrimary Boolean  @default(false)
+  tenantId  String
+  tenant    Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId])
+}
+
+enum TenantUserRole {
+  OWNER
+  STAFF
+}
+
+model TenantUser {
+  id           String         @id @default(cuid())
+  email        String
+  passwordHash String
+  name         String?
+  role         TenantUserRole @default(STAFF)
+  tenantId     String
+  tenant       Tenant         @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+
+  @@unique([tenantId, email])
+  @@index([tenantId])
+}
+
+model BrandSettings {
+  id             String  @id @default(cuid())
+  tenantId       String  @unique
+  tenant         Tenant  @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  displayName    String
+  primaryColor   String  @default("#e85d04")
+  logoUrl        String?
+  faviconUrl     String?
+}
+
+enum PaymentProvider {
+  MANUAL
+  MOLLIE
+}
+
+model BusinessSettings {
+  id                     String          @id @default(cuid())
+  tenantId               String          @unique
+  tenant                 Tenant          @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  pickupEnabled          Boolean         @default(true)
+  deliveryEnabled        Boolean         @default(false)
+  minOrderCents          Int             @default(0)
+  orderLeadMinutes       Int             @default(30)
+  slotIntervalMinutes    Int             @default(15)
+  onlinePaymentsEnabled  Boolean         @default(false)
+  requireOnlinePayment   Boolean         @default(false)
+  paymentProvider        PaymentProvider @default(MANUAL)
+  mollieApiKey           String?
+}
+
+model FeatureFlag {
+  id        String  @id @default(cuid())
+  tenantId  String
+  tenant    Tenant  @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  key       String
+  enabled   Boolean @default(false)
+
+  @@unique([tenantId, key])
+}
+
+model Category {
+  id          String    @id @default(cuid())
+  tenantId    String
+  tenant      Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  name        String
+  slug        String
+  description String?
+  sortOrder   Int       @default(0)
+  isActive    Boolean   @default(true)
+  products    Product[]
+  modifierGroups CategoryModifierGroup[]
+
+  @@unique([tenantId, slug])
+  @@index([tenantId, isActive])
+}
+
+model Product {
+  id             String   @id @default(cuid())
+  tenantId       String
+  tenant         Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  categoryId     String?
+  category       Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  name           String
+  slug           String
+  description    String?
+  imageUrl       String?
+  priceCents     Int
+  isActive       Boolean  @default(true)
+  isAvailable    Boolean  @default(true)
+  sortOrder      Int      @default(0)
+  orderLines     OrderLine[]
+
+  @@unique([tenantId, slug])
+  @@index([tenantId, categoryId, isActive])
+}
+
+model CategoryModifierGroup {
+  id            String   @id @default(cuid())
+  categoryId    String
+  category      Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  name          String
+  minSelections Int      @default(0)
+  maxSelections Int      @default(1)
+  isRequired    Boolean  @default(false)
+  sortOrder     Int      @default(0)
+  options       CategoryModifierOption[]
+}
+
+model CategoryModifierOption {
+  id                 String   @id @default(cuid())
+  groupId            String
+  group              CategoryModifierGroup @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  name               String
+  priceCents         Int      @default(0)
+  isDefault          Boolean  @default(false)
+  sortOrder          Int      @default(0)
+  isActive           Boolean  @default(true)
+  orderLineModifiers OrderLineModifier[]
+}
+
+model OpeningHour {
+  id        String @id @default(cuid())
+  tenantId  String
+  tenant    Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  dayOfWeek Int
+  openTime  String
+  closeTime String
+  isClosed  Boolean @default(false)
+
+  @@unique([tenantId, dayOfWeek])
+}
+
+model ClosingException {
+  id        String   @id @default(cuid())
+  tenantId  String
+  tenant    Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  date      DateTime @db.Date
+  reason    String?
+  isClosed  Boolean  @default(true)
+
+  @@unique([tenantId, date])
+}
+
+enum FulfillmentType {
+  PICKUP
+  DELIVERY
+}
+
+model TimeSlotRule {
+  id              String          @id @default(cuid())
+  tenantId        String
+  tenant          Tenant          @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  fulfillment     FulfillmentType
+  dayOfWeek       Int?
+  startTime       String
+  endTime         String
+  intervalMinutes Int             @default(15)
+  maxOrders       Int
+  isActive        Boolean         @default(true)
+
+  @@index([tenantId, fulfillment])
+}
+
+model TimeSlotInstance {
+  id          String          @id @default(cuid())
+  tenantId    String
+  tenant      Tenant          @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  fulfillment FulfillmentType
+  startsAt    DateTime
+  endsAt      DateTime
+  maxOrders   Int
+  bookedCount Int             @default(0)
+  isBlocked   Boolean         @default(false)
+  orders      Order[]
+
+  @@unique([tenantId, fulfillment, startsAt])
+  @@index([tenantId, startsAt])
+}
+
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  PREPARING
+  READY
+  COMPLETED
+  CANCELLED
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  FAILED
+  REFUNDED
+}
+
+model Order {
+  id                 String           @id @default(cuid())
+  tenantId           String
+  tenant             Tenant           @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  orderNumber        String
+  status             OrderStatus      @default(PENDING)
+  fulfillment        FulfillmentType
+  customerName       String
+  customerPhone      String
+  customerEmail      String?
+  customerAddress    String?
+  notes              String?
+  subtotalCents      Int
+  totalCents         Int
+  timeSlotInstanceId String?
+  timeSlotInstance   TimeSlotInstance? @relation(fields: [timeSlotInstanceId], references: [id])
+  scheduledAt        DateTime?
+  createdAt          DateTime         @default(now())
+  updatedAt          DateTime         @updatedAt
+  lines              OrderLine[]
+  payment            Payment?
+
+  @@unique([tenantId, orderNumber])
+  @@index([tenantId, status, createdAt])
+  @@index([tenantId, timeSlotInstanceId])
+}
+
+model OrderLine {
+  id             String   @id @default(cuid())
+  orderId        String
+  order          Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId      String?
+  product        Product? @relation(fields: [productId], references: [id], onDelete: SetNull)
+  name           String
+  quantity       Int
+  unitPriceCents Int
+  lineTotalCents Int
+  modifiers      OrderLineModifier[]
+}
+
+model OrderLineModifier {
+  id          String  @id @default(cuid())
+  orderLineId String
+  orderLine   OrderLine @relation(fields: [orderLineId], references: [id], onDelete: Cascade)
+  optionId    String?
+  option      CategoryModifierOption? @relation(fields: [optionId], references: [id], onDelete: SetNull)
+  name        String
+  priceCents  Int
+}
+
+model Payment {
+  id          String        @id @default(cuid())
+  orderId     String        @unique
+  order       Order         @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  status      PaymentStatus @default(PENDING)
+  amountCents Int
+  provider    String?
+  providerRef String?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+}

@@ -1,0 +1,174 @@
+category,name,description,price_eur
+Friet,Mini,,2.80
+Friet,Klein,,3.20
+Friet,Middel,,3.60
+Friet,Groot,,4.00
+Friet,Friet Julien,"Friet, stoofvleessaus, viandel, mayo, bicky-ui",10.00
+Friet,Friet Rombout,"Friet, stoofvleessaus, mexicano, mayo, bicky-ui",10.00
+Snack,Bami,,3.20
+Snack,Berenpoot,,4.00
+Snack,Bitterballen,,3.20
+Snack,Boulet,,3.50
+Snack,Boulet speciaal,,4.50
+Snack,Frikandel XXL,,4.50
+Snack,Garnaalkroket,,4.00
+Snack,Grizzly,,4.50
+Snack,Goulashkroket,,3.20
+Snack,Kaaskroket,,3.20
+Snack,Kipcorn,,3.20
+Snack,Kipfingers,,4.00
+Snack,Kipnuggets,,4.00
+Snack,Kippenboutjes,,5.00
+Snack,Kipsaté,,4.50
+Snack,Mini Loempia,,4.00
+Snack,Mini Lucifers,,4.00
+Snack,Mammoet,,3.50
+Snack,Mozarellasticks,,4.00
+Snack,Mexicano,,4.00
+Snack,Ribster,,4.00
+Snack,Saté,,4.50
+Snack,Sitostick,,4.00
+Snack,Viandel spicy,,4.00
+Snack,Vlammetjes,,4.00
+Snack,Vuurvreter,,3.50
+Snack,Vleeskroket,,3.50
+Snack,Zigeunerstick,,3.50
+Snack,Cervela speciaal,,4.50
+Snack,Curryworst speciaal,,3.50
+Snack,Frikandel XXL speciaal,,6.00
+Snack,Viandel speciaal,,4.20
+Snack,Cervela,,3.50
+Snack,Curryworst,,2.50
+Snack,Viandel,,3.20
+Koude sauzen,Mayo,,1.10
+Koude sauzen,Tomatenketchup,,1.10
+Koude sauzen,Curryketchup,,1.10
+Koude sauzen,Andalouse,,1.10
+Koude sauzen,Américain,,1.10
+Koude sauzen,Barbecue,,1.10
+Koude sauzen,Brazil,,1.10
+Koude sauzen,Cocktail,,1.10
+Koude sauzen,Curry,,1.10
+Koude sauzen,Joppie,,1.10
+Koude sauzen,Look,,1.10
+Koude sauzen,Mammouth,,1.10
+Koude sauzen,Mammouth hot,,1.10
+Koude sauzen,Mosterd,,1.10
+Koude sauzen,Peper,,1.10
+Koude sauzen,Pili pili,,1.10
+Koude sauzen,Samuraï,,1.10
+Koude sauzen,Tartaar,,1.10
+Koude sauzen,Truffelmayo,,1.10
+Koude sauzen,Zoete Mayo,,1.10
+Koude sauzen,Zoetzuur pikant,,1.10
+Koude sauzen,Spéciaalsaus,,2.00
+Koude sauzen,Saus dubbel,,2.00
+Warme sauzen,Stoofvlees,,5.00
+Warme sauzen,Stoofvleessaus,,3.00
+Hamburgers,Hamburger,,4.00
+Hamburgers,Cheeseburger,,4.70
+Hamburgers,Baconburger,,5.00
+Hamburgers,Cheese-baconburger,,5.50
+Hamburgers,Chicken Crispy,,5.00
+Hamburgers,Fishburger,,5.00
+Hamburgers,Veggieburger,,5.00
+Hamburgers,Halalburger,,4.50
+Hamburgers,Black Pepper Burger,"Angus burger, peperbun, pepersaus, sla, tomaat, rode ui",7.00
+Hamburgers,Jalapeno Burger,"sesambun, jalapenoburger, sla, tomaat, cheese, jalapeno's, jalapenomayo",6.50
+Hamburgers,Jalapenoburger,"Sesambun, sla, tomaat, augurk, Jalapenoburger, cheddar, jalapeno's jalapenomayo",6.50
+Bickyburger,Bicky Mexicano,,6.50
+Bickyburger,Bicky Chicken,,5.50
+Bickyburger,Bicky Fish,,5.50
+Classic burgers,Chicken Crispy Classic,"sla,tomaat,augurk, cheese, spek",6.50
+Classic burgers,Hamburger Classic,"sla,tomaat,augurk, cheese, spek",6.00
+Classic burgers,Mexicano Classic,"sla,tomaat,augurk, cheese, spek",8.00
+Warme Broodjes,Mexicano,,6.00
+Warme Broodjes,Curryworst,,6.00
+Warme Broodjes,Curryworst spéciaal,,6.50
+Warme Broodjes,Boulet,,6.00
+Warme Broodjes,Boulet spéciaal,,6.50
+Warme Broodjes,Saté,,6.50
+Warme Broodjes,Kipsaté,,6.50
+Warme Broodjes,Sitostick,,6.50
+Warme Broodjes,Grizzly,,7.00
+Warme Broodjes,Vleeskroket (2 stuks),,8.00
+Warme Broodjes,Kaaskroket (2 stuks),,8.00
+Broodjes,Kaas,,4.20
+Broodjes,Ham,,4.20
+Broodjes,Kaas/Ham,,4.50
+Broodjes,Kipfilet,,4.50
+Broodjes,Salami,,4.50
+Broodjes,Américain,,4.50
+Broodjes,Martino,,4.80
+Broodjes,Kip curry,,4.50
+Broodjes,Krabsla,,4.80
+Broodjes,Tonijnsla,,4.50
+Broodjes,Tonijnsla pikant,,4.50
+Broodjes,Tonijntino,,4.80
+Broodjes,Gerookte zalm,,6.00
+Broodjes,Brie,,6.00
+Broodjes,Gegrilde kip,,5.50
+Speciale koude broodjes,Grill Chicken,"Kippensneetjes, Andalouse, sla, wortel, bicky-ui",6.00
+Speciale koude broodjes,Grill Chicken Bacon,"Kippensneetjes,bacon,sla, Andalouse, wortel, bicky-ui,",6.50
+Speciale koude broodjes,Grill Chicken cocktail,"Kippensneetjes, cocktail, sla, tomaat, augurk, bicky-ui",6.00
+Speciale koude broodjes,Grill Chicken Caesar,"Kippensneetjes, sla, komkommer, ansjovis, parmezaanse kaas, caesardressing)",6.50
+Speciale koude broodjes,Kip Caprese,"kipfilet, pesto, tomaat, mozarella, rucola",6.50
+Speciale koude broodjes,Sweet brie,"brie, honing, noten, rucola",6.50
+Speciale koude broodjes,Sweet brie bacon,"brie, bacon, honing, noten, rucola",7.00
+Speciale koude broodjes,Gentse Martino,"Américain, martinosaus, ui, augurk, ansjovis",5.50
+Speciale koude broodjes,Tomaat Mozarella,"pesto, mozarella, tomaat, zongedroogde tomaaat, rucola",5.50
+Speciale koude broodjes,Italiaanse ham,"pesto, mozarella,Italiaanse ham, tomaat, zongedroogde tomaaat, rucola",6.50
+Speciale koude broodjes,Rosbief Truffelmayo,"Huisgemaakte rosbief, truffelmayo, rucola, parmezaanse kaas",6.50
+Speciale koude broodjes,Salmon,"Gerookte zalm, kruidenkaas, ui, komkommer, rucola",7.00
+Speciale koude broodjes,Atlantique,"Gerookte zalm, ui, huisgemaakte tartaar, cresson",7.00
+Speciale koude broodjes,Diabolique,"boulet, sla, tomaat, augurk, mayo, ketchup, ui",6.50
+Speciale koude broodjes,Tonijnsla-perzik,"Tonijnsla-perzik-cocktailsaus- cresson Uitverkocht Grill Chicken Pesto Kipsneetjes, pesto, rucola, Parmezaanse kaas",6.50
+Speciale koude broodjes,Rosbief Pesto,"Huisgemaakte Rosbief, pesto, rucola, Parmezaanse kaas, zongedroogde tomaat",6.50
+Wraps,Wrap chicken,"kip,sla,wortel, komkommer, bicky-ui, cocktailsaus",6.00
+Wraps,Wrap chicken caesar,"kip, ansjovis, sla, caesardressing, komkommer, bicky-ui, parmesanschilfers",6.50
+Wraps,Wrap Italiaanse ham,"Italiaanse ham, mozarella, pesto, zongedroogde tomaat, rucola",6.50
+Wraps,Wrap Tomaat Mozarella,"rucola, mozarella, tomaat, zongedroogde tomaat, pesto",5.50
+Wraps,Wrap Salmon,"Gerookte zalm, kruidenkaas, rucola, tomaat, snipperui",7.00
+Mitraillette,Hamburger,,8.50
+Mitraillette,Fishburger,,9.00
+Mitraillette,Veggieburger,,9.50
+Mitraillette,Hallalburger,,8.50
+Mitraillette,Chicken Crispy burger,,9.00
+Bickyburger,Bicky fish,,9.50
+Bickyburger,Bicky Chicken,,9.50
+Bickyburger,Bicky Mexicano,,9.00
+Bickyburger,Mexicano,,8.50
+Bickyburger,Curryworst,,8.50
+Bickyburger,Saté,,9.00
+Bickyburger,Kipsaté,,9.00
+Bickyburger,Sitostick,,9.00
+Bickyburger,Grizzly,,9.50
+Bickyburger,Vleeskroket (2 stuks),,10.50
+Bickyburger,Kaaskroket,,10.50
+Bickyburger,Hamburger Classic,,10.50
+Bickyburger,Chicken Crispy Classic,,11.00
+Bickyburger,Mexicano Classic,,10.50
+Bickyburger,Cheeseburger,,9.00
+Bickyburger,Baconburger,,9.50
+Bickyburger,Cheesebaconburger,,10.00
+Bickyburger,Boulet,,8.50
+Drank (fles),Water plat,,2.50
+Drank (fles),Water bruis,,2.50
+Drank (fles),Cola,,3.00
+Drank (fles),Cola zero,,3.00
+Drank (fles),Fanta,,3.00
+Drank (fles),Ice Tea,,3.00
+Drank (fles),Ice Tea Green,,3.00
+Drank (fles),Sprite,,3.00
+Drank (blik),Cola,,2.50
+Drank (blik),Cola zero,,2.50
+Drank (blik),Fanta,,2.50
+Drank (blik),Ice Tea,,2.50
+Drank (blik),Ice Tea zero,,2.50
+Drank (blik),Ice Tea Green,,2.50
+Drank (blik),Ice Tea Peach,,2.50
+Drank (blik),Sprite,,2.50
+Drank (blik),Jupiler,,2.50
+Drank (blik),Redbull,,3.00
+Drank (blik),Nalu,,3.00
+Warme drank,Koffie,,2.50

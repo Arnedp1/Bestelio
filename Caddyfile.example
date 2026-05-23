@@ -1,0 +1,12 @@
+# Place on your VPS; adjust domains and upstream port.
+
+demo.platform.example.com {
+	encode gzip
+	reverse_proxy localhost:3000
+}
+
+# Future custom domain for a tenant:
+# bestellen.clientdomain.be {
+# 	encode gzip
+# 	reverse_proxy localhost:3000
+# }
