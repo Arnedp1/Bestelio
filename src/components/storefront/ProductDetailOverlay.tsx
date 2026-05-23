@@ -59,7 +59,7 @@ export function ProductDetailOverlay({
       setSelected([]);
       setError(null);
     }
-  }, [open, product?.productId]);
+  }, [open, product]);
 
   useEffect(() => {
     if (!open) return;

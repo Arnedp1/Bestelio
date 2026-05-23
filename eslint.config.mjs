@@ -7,8 +7,9 @@ const eslintConfig = defineConfig([
   ...nextTs,
   {
     rules: {
-      // Veel geldige sync-patronen (hash, portal mount, controlled props) worden anders als error gezien.
-      "react-hooks/set-state-in-effect": "warn",
+      // Next 16 ESLint: meldt "Error:" in de tekst maar flagt geldige patronen (portal, hash, forms).
+      "react-hooks/set-state-in-effect": "off",
+      "react-hooks/exhaustive-deps": "warn",
     },
   },
   // Override default ignores of eslint-config-next.
