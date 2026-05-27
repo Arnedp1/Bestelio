@@ -456,13 +456,14 @@ export async function deleteClosingException(formData: FormData) {
 
 export async function upsertTimeSlotRule(formData: FormData) {
   const tenantId = await tenantScope();
+  const maxRevenueCents = Math.round(Number(formData.get("maxRevenueEuro")) * 100);
   const parsed = timeSlotRuleSchema.parse({
     fulfillment: formData.get("fulfillment"),
     dayOfWeek: null,
     startTime: formData.get("startTime") || "11:00",
     endTime: formData.get("endTime") || "22:00",
     intervalMinutes: formData.get("intervalMinutes"),
-    maxOrders: formData.get("maxOrders"),
+    maxRevenueCents,
     isActive: formData.get("isActive") === "on",
   });
 
@@ -472,7 +473,7 @@ export async function upsertTimeSlotRule(formData: FormData) {
     startTime: parsed.startTime,
     endTime: parsed.endTime,
     intervalMinutes: parsed.intervalMinutes,
-    maxOrders: parsed.maxOrders,
+    maxOrders: parsed.maxRevenueCents,
     isActive: parsed.isActive,
   };
 

@@ -24,16 +24,18 @@ export function CheckoutForm({
   onlinePaymentsEnabled,
   requireOnlinePayment,
   minOrderCents,
-  paymentMode,
-  canPayOnline,
+  paymentMode = "off",
+  canPayOnline = false,
+  allowOnlinePayment = true,
 }: {
   pickupEnabled: boolean;
   deliveryEnabled: boolean;
   onlinePaymentsEnabled: boolean;
   requireOnlinePayment: boolean;
   minOrderCents: number;
-  paymentMode: PaymentMode;
-  canPayOnline: boolean;
+  paymentMode?: PaymentMode;
+  canPayOnline?: boolean;
+  allowOnlinePayment?: boolean;
 }) {
   const router = useRouter();
   const [fulfillment, setFulfillment] = useState<"PICKUP" | "DELIVERY">(
@@ -41,9 +43,10 @@ export function CheckoutForm({
   );
   const [slots, setSlots] = useState<Slot[]>([]);
   const [slotId, setSlotId] = useState("");
-  const forceOnlinePayment = requireOnlinePayment && onlinePaymentsEnabled;
+  const showPaymentSection = allowOnlinePayment && onlinePaymentsEnabled;
+  const forceOnlinePayment = showPaymentSection && requireOnlinePayment;
   const [payOnline, setPayOnline] = useState(
-    () => forceOnlinePayment || onlinePaymentsEnabled
+    () => showPaymentSection && (forceOnlinePayment || onlinePaymentsEnabled)
   );
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -84,7 +87,7 @@ export function CheckoutForm({
       notes: String(fd.get("notes") ?? "") || undefined,
       fulfillment,
       timeSlotInstanceId: slotId,
-      payOnline: (forceOnlinePayment || payOnline) && canPayOnline,
+      payOnline: allowOnlinePayment ? (forceOnlinePayment || payOnline) && canPayOnline : false,
     };
 
     const parsed = checkoutSchema.safeParse(payload);
@@ -116,7 +119,6 @@ export function CheckoutForm({
         message?: string;
         fieldErrors?: Record<string, string>;
         minOrderCents?: number;
-        suggestedSlotId?: string;
       } = {};
 
       try {
@@ -128,15 +130,6 @@ export function CheckoutForm({
       if (!res.ok) {
         if (data.reason === "validation" && data.fieldErrors) {
           setFieldErrors(data.fieldErrors);
-          setError(null);
-          return;
-        }
-        if (data.reason === "slot_full" && data.suggestedSlotId) {
-          setSlotId(data.suggestedSlotId);
-          setFieldErrors({
-            timeSlotInstanceId:
-              "Dit tijdslot was net vol. Kies het voorgestelde slot en bevestig opnieuw.",
-          });
           setError(null);
           return;
         }
@@ -332,7 +325,7 @@ export function CheckoutForm({
         </label>
       </div>
 
-      {onlinePaymentsEnabled && (
+      {showPaymentSection && (
         <div className="rounded-xl border border-stone-200 bg-stone-50 p-4">
           {forceOnlinePayment ? (
             canPayOnline ? (

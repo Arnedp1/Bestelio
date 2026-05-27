@@ -13,11 +13,13 @@ export function ModifierPicker({
   selected,
   onChange,
   compact = false,
+  touchFriendly = false,
 }: {
   groups: StorefrontModifierGroup[];
   selected: string[];
   onChange: (next: string[]) => void;
   compact?: boolean;
+  touchFriendly?: boolean;
 }) {
   if (groups.length === 0) return null;
 
@@ -40,7 +42,9 @@ export function ModifierPicker({
             <div
               className={
                 compact
-                  ? "mt-2 flex flex-col gap-1.5"
+                  ? touchFriendly
+                    ? "mt-2 grid grid-cols-1 gap-2 sm:grid-cols-2"
+                    : "mt-2 flex flex-col gap-1.5"
                   : "mt-3 flex flex-wrap gap-2"
               }
             >
@@ -55,7 +59,9 @@ export function ModifierPicker({
                       type="button"
                       disabled={disabled}
                       onClick={() => onChange(toggleModifierOption(selected, opt.id, group))}
-                      className={`flex w-full items-center gap-3 rounded-lg border px-3 py-2.5 text-left text-sm font-medium transition ${
+                      className={`flex w-full items-center gap-3 rounded-lg border text-left font-medium transition ${
+                        touchFriendly ? "min-h-[3.25rem] px-3.5 py-3 text-[0.95rem]" : "px-3 py-2.5 text-sm"
+                      } ${
                         active
                           ? "border-[var(--brand)] bg-[var(--brand-light)] text-stone-900 shadow-sm"
                           : disabled
@@ -64,7 +70,9 @@ export function ModifierPicker({
                       }`}
                     >
                       <span
-                        className={`flex h-5 w-5 shrink-0 items-center justify-center border-2 ${
+                        className={`flex shrink-0 items-center justify-center border-2 ${
+                          touchFriendly ? "h-6 w-6" : "h-5 w-5"
+                        } ${
                           multi ? "rounded" : "rounded-full"
                         } ${
                           active
@@ -76,7 +84,7 @@ export function ModifierPicker({
                         {active && (
                           <svg
                             viewBox="0 0 12 12"
-                            className="h-3 w-3"
+                            className={touchFriendly ? "h-3.5 w-3.5" : "h-3 w-3"}
                             fill="none"
                             stroke="currentColor"
                             strokeWidth="2"
@@ -92,7 +100,9 @@ export function ModifierPicker({
                       <span className="min-w-0 flex-1 leading-snug">{opt.name}</span>
                       {opt.priceCents !== 0 && (
                         <span
-                          className={`shrink-0 tabular-nums text-xs ${
+                          className={`shrink-0 tabular-nums ${
+                            touchFriendly ? "text-sm" : "text-xs"
+                          } ${
                             active ? "text-[var(--brand)]" : "text-stone-500"
                           }`}
                         >

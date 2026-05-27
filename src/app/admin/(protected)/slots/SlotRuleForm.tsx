@@ -50,11 +50,13 @@ export function SlotRuleForm({
           className={inputClass}
         />
       </FormField>
-      <FormField label="Max. bestellingen per slot">
+      <FormField label="Max. omzet per slot (€)">
         <input
-          name="maxOrders"
+          name="maxRevenueEuro"
           type="number"
-          defaultValue={rule?.maxOrders ?? 8}
+          step="0.01"
+          min="1"
+          defaultValue={((rule?.maxOrders ?? 15000) / 100).toFixed(2)}
           className={inputClass}
         />
       </FormField>

@@ -29,7 +29,7 @@ export async function StorefrontShell({
 
   return (
     <div
-      className="mx-auto min-h-screen max-w-4xl"
+      className="mx-auto flex min-h-screen max-w-4xl flex-col"
       style={
         {
           "--brand": brand.primaryColor,
@@ -45,7 +45,7 @@ export async function StorefrontShell({
         tagline={DEFAULT_TAGLINE}
       />
       <OpenStatusBanner status={openStatus} />
-      <div className="px-4 pb-12 pt-5 sm:px-6">{children}</div>
+      <main className="flex-1 px-4 pb-12 pt-5 sm:px-6">{children}</main>
       {showFooter && (
         <footer className="border-t border-stone-200 bg-white px-4 py-6 text-center text-xs text-stone-500 sm:px-6">
           <p>{brand.displayName} · Online bestellen</p>

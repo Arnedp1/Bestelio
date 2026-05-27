@@ -36,7 +36,10 @@ export async function getAdminOrdersSnapshot(
   tenantId: string
 ): Promise<AdminOrdersSnapshot> {
   const orders = await prisma.order.findMany({
-    where: { tenantId },
+    where: {
+      tenantId,
+      OR: [{ payment: null }, { payment: { status: "PAID" } }],
+    },
     orderBy: { createdAt: "desc" },
     take: 100,
     include: {

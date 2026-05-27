@@ -1,4 +1,4 @@
-import type { FulfillmentType } from "@prisma/client";
+import { OrderStatus, type FulfillmentType } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { isoDateFromDate } from "@/lib/dates/calendar";
 import { isOpenOnDate } from "@/lib/hours/is-open";
@@ -9,8 +9,8 @@ export type AvailableSlot = {
   startsAt: Date;
   endsAt: Date;
   fulfillment: FulfillmentType;
-  maxOrders: number;
-  bookedCount: number;
+  maxRevenueCents: number;
+  bookedRevenueCents: number;
   remaining: number;
 };
 
@@ -30,17 +30,38 @@ export async function listAvailableSlots(params: {
     orderBy: { startsAt: "asc" },
   });
 
-  return instances
-    .map((s) => ({
+  const slotIds = instances.map((s) => s.id);
+  const revenueBySlot =
+    slotIds.length === 0
+      ? new Map<string, number>()
+      : new Map(
+          (
+            await prisma.order.groupBy({
+              by: ["timeSlotInstanceId"],
+              where: {
+                tenantId: params.tenantId,
+                timeSlotInstanceId: { in: slotIds },
+                status: { not: OrderStatus.CANCELLED },
+              },
+              _sum: { totalCents: true },
+            })
+          )
+            .filter((row) => row.timeSlotInstanceId)
+            .map((row) => [row.timeSlotInstanceId as string, row._sum.totalCents ?? 0])
+        );
+
+  return instances.map((s) => {
+    const bookedRevenueCents = revenueBySlot.get(s.id) ?? 0;
+    return {
       id: s.id,
       startsAt: s.startsAt,
       endsAt: s.endsAt,
       fulfillment: s.fulfillment,
-      maxOrders: s.maxOrders,
-      bookedCount: s.bookedCount,
-      remaining: slotRemaining(s.maxOrders, s.bookedCount),
-    }))
-    .filter((s) => s.remaining > 0);
+      maxRevenueCents: s.maxOrders,
+      bookedRevenueCents,
+      remaining: slotRemaining(s.maxOrders, bookedRevenueCents),
+    };
+  });
 }
 
 /** Verberg slots die te snel starten (instelling «Vooruitbestellen» in admin). */

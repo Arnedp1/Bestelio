@@ -7,8 +7,8 @@ import { SlotsTodaySection } from "./SlotsTodaySection";
 type TodayRow = {
   id: string;
   startsAt: Date;
-  maxOrders: number;
-  bookedCount: number;
+  maxRevenueCents: number;
+  bookedRevenueCents: number;
   isBlocked: boolean;
 };
 

@@ -7,8 +7,8 @@ function slot(startsAt: Date): AvailableSlot {
     startsAt,
     endsAt: new Date(startsAt.getTime() + 15 * 60_000),
     fulfillment: "PICKUP",
-    maxOrders: 8,
-    bookedCount: 0,
+    maxRevenueCents: 8000,
+    bookedRevenueCents: 0,
     remaining: 8,
   };
 }

@@ -30,11 +30,13 @@ export function ProductDetailOverlay({
   onClose,
   product,
   onAdded,
+  touchFriendly = false,
 }: {
   open: boolean;
   onClose: () => void;
   product: ProductDetailPayload | null;
   onAdded?: () => void;
+  touchFriendly?: boolean;
 }) {
   const router = useRouter();
   const [mounted, setMounted] = useState(false);
@@ -66,6 +68,13 @@ export function ProductDetailOverlay({
     function onKey(e: KeyboardEvent) {
       if (e.key === "Escape") onClose();
     }
+    // In kiosk/order-entry mode we keep page scrolling behavior intact.
+    if (touchFriendly) {
+      window.addEventListener("keydown", onKey);
+      return () => {
+        window.removeEventListener("keydown", onKey);
+      };
+    }
     const prevOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     window.addEventListener("keydown", onKey);
@@ -73,7 +82,7 @@ export function ProductDetailOverlay({
       document.body.style.overflow = prevOverflow;
       window.removeEventListener("keydown", onKey);
     };
-  }, [open, onClose]);
+  }, [open, onClose, touchFriendly]);
 
   async function addToCart() {
     if (!product) return;
@@ -125,7 +134,11 @@ export function ProductDetailOverlay({
         aria-label="Sluiten"
         onClick={onClose}
       />
-      <div className="storefront-popup-panel">
+      <div
+        className={`storefront-popup-panel ${
+          touchFriendly ? "storefront-popup-panel-kiosk" : ""
+        }`}
+      >
         <header className="storefront-popup-header">
           <div className="min-w-0 pr-3">
             <h2 id="product-detail-title" className="text-base font-bold text-stone-900">
@@ -165,6 +178,7 @@ export function ProductDetailOverlay({
               selected={selected}
               onChange={setSelected}
               compact
+              touchFriendly={touchFriendly}
             />
           </div>
         )}

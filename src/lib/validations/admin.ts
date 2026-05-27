@@ -34,7 +34,7 @@ export const timeSlotRuleSchema = z.object({
   startTime: hhMmSchema,
   endTime: hhMmSchema,
   intervalMinutes: z.coerce.number().int().min(5).max(120),
-  maxOrders: z.coerce.number().int().min(1).max(500),
+  maxRevenueCents: z.coerce.number().int().min(100).max(2_000_000),
   isActive: z.coerce.boolean(),
 });
 

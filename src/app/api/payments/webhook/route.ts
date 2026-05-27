@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { verifyMolliePayment } from "@/lib/payments/provider";
+import { enqueueKitchenPrintJob } from "@/lib/print/enqueue";
 
 export async function POST(request: Request) {
   const body = await request.formData().catch(() => null);
@@ -24,10 +25,15 @@ export async function POST(request: Request) {
   const status = await verifyMolliePayment(payment.order.tenantId, id);
 
   if (status === "PAID") {
-    await prisma.payment.update({
-      where: { id: payment.id },
+    const updated = await prisma.payment.updateMany({
+      where: { id: payment.id, status: { not: "PAID" } },
       data: { status: "PAID" },
     });
+    if (updated.count > 0) {
+      void enqueueKitchenPrintJob(payment.order.tenantId, payment.orderId).catch((err) => {
+        console.error("[print] enqueue after webhook failed", err);
+      });
+    }
   } else if (status === "FAILED") {
     await prisma.payment.update({
       where: { id: payment.id },

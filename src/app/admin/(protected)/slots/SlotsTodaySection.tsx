@@ -3,14 +3,14 @@ import { toggleSlotBlocked } from "../actions";
 type Row = {
   id: string;
   startsAt: Date;
-  maxOrders: number;
-  bookedCount: number;
+  maxRevenueCents: number;
+  bookedRevenueCents: number;
   isBlocked: boolean;
 };
 
 function occupancyStatus(row: Row): string | null {
   if (row.isBlocked) return "dicht";
-  if (row.bookedCount >= row.maxOrders) return "vol";
+  if (row.bookedRevenueCents >= row.maxRevenueCents) return "omzetdoel bereikt";
   return null;
 }
 
@@ -43,7 +43,7 @@ export function SlotsTodaySection({
           <thead>
             <tr>
               <th>Tijd</th>
-              <th>Slots</th>
+              <th>Omzet</th>
               <th className="text-right">Actie</th>
             </tr>
           </thead>
@@ -60,7 +60,8 @@ export function SlotsTodaySection({
                   </td>
                   <td className="tabular-nums">
                     <span className="block">
-                      {row.bookedCount}/{row.maxOrders} slots
+                      € {(row.bookedRevenueCents / 100).toFixed(2)} / €{" "}
+                      {(row.maxRevenueCents / 100).toFixed(2)}
                     </span>
                     <span
                       className={`block h-4 text-xs leading-4 ${

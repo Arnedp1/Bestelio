@@ -4,6 +4,7 @@ import type { PaymentStatus } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { requireTenant } from "@/lib/tenant/context";
 import { verifyMolliePayment } from "@/lib/payments/provider";
+import { enqueueKitchenPrintJob } from "@/lib/print/enqueue";
 
 const schema = z.object({ orderId: z.string().cuid() });
 
@@ -31,10 +32,15 @@ export async function POST(request: Request) {
     const verified = await verifyMolliePayment(tenant.id, payment.providerRef);
 
     if (verified === "PAID") {
-      await prisma.payment.update({
-        where: { id: payment.id },
+      const updated = await prisma.payment.updateMany({
+        where: { id: payment.id, status: { not: "PAID" } },
         data: { status: "PAID" },
       });
+      if (updated.count > 0) {
+        void enqueueKitchenPrintJob(tenant.id, payment.orderId).catch((err) => {
+          console.error("[print] enqueue after payment confirm failed", err);
+        });
+      }
       return NextResponse.json({ status: "PAID" });
     }
 

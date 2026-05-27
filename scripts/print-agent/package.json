@@ -1,0 +1,14 @@
+{
+  "name": "honger-print-agent",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "tsx run.ts"
+  },
+  "dependencies": {
+    "node-thermal-printer": "^4.4.5"
+  },
+  "devDependencies": {
+    "tsx": "^4.22.3"
+  }
+}

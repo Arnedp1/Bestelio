@@ -5,6 +5,7 @@ import { requireTenant } from "@/lib/tenant/context";
 import { getStorefrontBrand } from "@/lib/storefront/brand";
 import { AdminNav } from "@/components/admin/AdminNav";
 import { AdminMobileNav } from "@/components/admin/AdminMobileNav";
+import { QzAutoPrintBridge } from "./QzAutoPrintBridge";
 
 export default async function AdminProtectedLayout({
   children,
@@ -54,6 +55,7 @@ export default async function AdminProtectedLayout({
         </header>
 
         <main className="flex-1 p-4 lg:p-8">
+          <QzAutoPrintBridge />
           <div className="mx-auto w-full max-w-6xl admin-content">{children}</div>
         </main>
       </div>

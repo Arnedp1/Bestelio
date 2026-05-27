@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import type { Cart } from "@/lib/cart/types";
 import { cartSubtotalCents } from "@/lib/cart/types";
 import { bookTimeSlot, releaseTimeSlot } from "@/lib/slots/booking";
+import { enqueueKitchenPrintJob } from "@/lib/print/enqueue";
 
 export type CreateOrderInput = {
   tenantId: string;
@@ -15,6 +16,8 @@ export type CreateOrderInput = {
   timeSlotInstanceId: string;
   cart: Cart;
   minOrderCents?: number;
+  initialPaymentStatus?: "PENDING" | "PAID";
+  paymentProvider?: string;
 };
 
 export type CreateOrderResult =
@@ -22,12 +25,11 @@ export type CreateOrderResult =
   | {
       ok: false;
       reason:
-        | "slot_full"
+        | "slot_blocked"
         | "empty_cart"
         | "slot_not_found"
         | "min_order"
         | "invalid_cart";
-      suggestedSlotId?: string;
       minOrderCents?: number;
     };
 
@@ -55,12 +57,13 @@ export async function createOrder(input: CreateOrderInput): Promise<CreateOrderR
   if (!booking.ok) {
     return {
       ok: false,
-      reason: booking.reason === "slot_not_found" ? "slot_not_found" : "slot_full",
-      suggestedSlotId: "suggestedSlotId" in booking ? booking.suggestedSlotId : undefined,
+      reason: booking.reason,
     };
   }
 
   const orderNumber = generateOrderNumber();
+  const initialPaymentStatus = input.initialPaymentStatus ?? "PAID";
+  const paymentProvider = input.paymentProvider ?? "manual";
 
   try {
     const slot = await prisma.timeSlotInstance.findFirst({
@@ -103,13 +106,19 @@ export async function createOrder(input: CreateOrderInput): Promise<CreateOrderR
         },
         payment: {
           create: {
-            status: "PENDING",
+            status: initialPaymentStatus,
             amountCents: subtotal,
-            provider: "manual",
+            provider: paymentProvider,
           },
         },
       },
     });
+
+    if (initialPaymentStatus === "PAID") {
+      void enqueueKitchenPrintJob(input.tenantId, order.id).catch((err) => {
+        console.error("[print] enqueue kitchen job failed", err);
+      });
+    }
 
     return {
       ok: true,

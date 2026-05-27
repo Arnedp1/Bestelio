@@ -56,6 +56,45 @@ npm run dev
 | `npm run db:push` | Alleen schema naar database |
 | `npm run db:seed` | Alleen demo-tenant + catalogus |
 | `npm run db:studio` | Prisma Studio |
+| `npm run print:agent` | Lokale bonprinter-agent (Windows, ESC/POS) |
+
+## Keukenbon / bonprinter
+
+Nieuwe bestellingen (webshop én **Bestelling ingave**) worden automatisch in een **print-wachtrij** gezet. Een kleine service op de kassa-PC haalt die jobs op en stuurt ze naar een **ESC/POS bonprinter** (58/80 mm).
+
+### Setup
+
+1. Installeer de **Windows-driver** van je bonprinter (Epson, Star, Bixolon, …).
+2. Noteer de **exacte printernaam** in Windows (Instellingen → Printers).
+3. Voeg toe aan `.env` (zie `.env.example`):
+   - `PRINT_AGENT_SECRET` — min. 16 tekens (zelfde in app en agent)
+   - `PRINT_AGENT_API_URL` — bv. `http://localhost:3000`
+   - `PRINTER_NAME` — exacte Windows-naam
+4. Schema bijwerken: `npm run db:push`
+5. Start de app: `npm run dev`
+6. Start op de kassa-PC: `npm run print:agent`
+
+### Gedrag
+
+- **Automatisch:** bij elke nieuwe order → printjob `PENDING`
+- **Handmatig:** admin **Bestellingen** → detail → knop **Keukenbon**
+- Agent pollt elke paar seconden, print, markeert `DONE` of `FAILED`
+
+Bonprinters gebruiken meestal **ESC/POS** (niet ZPL). Zebra labelprinters zijn een ander type.
+
+### QZ Tray certificaat (geen popup bij elke print)
+
+Je kan QZ Tray laten onthouden dat jouw webapp mag printen, zonder bestaande certificaten te verwijderen:
+
+1. Genereer een certificaat + private key voor QZ (self-signed kan voor lokaal).
+2. Zet beide in `.env`:
+   - `QZ_TRAY_CERT_PEM`
+   - `QZ_TRAY_PRIVATE_KEY_PEM`
+3. Herstart `npm run dev`.
+4. Open **Admin → Bestellingen**, verbind QZ en doe een testprint.
+5. In QZ popup: vink **Remember this decision** aan en klik **Allow**.
+
+Belangrijk: je hoeft andere certificaten in QZ Tray niet te verwijderen; QZ ondersteunt meerdere trusted certs.
 
 ## Productfoto's
 

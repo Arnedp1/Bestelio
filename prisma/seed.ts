@@ -144,7 +144,8 @@ async function main() {
         startTime: "11:00",
         endTime: "22:00",
         intervalMinutes: 15,
-        maxOrders: fulfillment === FulfillmentType.PICKUP ? 10 : 5,
+        // Slotbudget in centen (omzet), niet aantal bestellingen.
+        maxOrders: fulfillment === FulfillmentType.PICKUP ? 20000 : 12000,
       },
     });
   }

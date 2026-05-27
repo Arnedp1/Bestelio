@@ -8,7 +8,10 @@ type NavLink = { href: string; label: string; icon: string; exact?: boolean };
 const SECTIONS: { title: string; links: NavLink[] }[] = [
   {
     title: "Operatie",
-    links: [{ href: "/admin", label: "Bestellingen", icon: "📋", exact: true }],
+    links: [
+      { href: "/admin/orders", label: "Bestellingen", icon: "📋", exact: true },
+      { href: "/admin/orders/ingave", label: "Bestelling ingave", icon: "🧾", exact: true },
+    ],
   },
   {
     title: "Catalogus",
@@ -30,9 +33,27 @@ const SECTIONS: { title: string; links: NavLink[] }[] = [
   },
 ];
 
+function normalizePath(pathname: string): string {
+  if (pathname.length > 1 && pathname.endsWith("/")) {
+    return pathname.slice(0, -1);
+  }
+  return pathname;
+}
+
 function isActive(pathname: string, href: string, exact?: boolean) {
-  if (exact) return pathname === href;
-  return pathname === href || pathname.startsWith(`${href}/`);
+  const path = normalizePath(pathname);
+  const target = normalizePath(href);
+
+  // Keep orders and order-entry mutually exclusive at all times.
+  if (target === "/admin/orders") {
+    return path === "/admin/orders";
+  }
+  if (target === "/admin/orders/ingave") {
+    return path === "/admin/orders/ingave";
+  }
+
+  if (exact) return path === target;
+  return path === target || path.startsWith(`${target}/`);
 }
 
 export function AdminNav({ onNavigate }: { onNavigate?: () => void }) {

@@ -59,6 +59,8 @@ export function canSelectModifierOption(
   optionId: string
 ): boolean {
   if (selected.includes(optionId)) return true;
+  // Single-select behaves like radio buttons: another click replaces current choice.
+  if (group.maxSelections <= 1) return true;
   return selectionCountInGroup(group, selected) < group.maxSelections;
 }
 
@@ -95,11 +97,11 @@ export function toggleModifierOption(
   if (selected.includes(optionId)) {
     return selected.filter((x) => x !== optionId);
   }
+  if (group.maxSelections <= 1) {
+    const without = selected.filter((oid) => !group.options.some((o) => o.id === oid));
+    return [...without, optionId];
+  }
   if (!canSelectModifierOption(group, selected, optionId)) {
-    if (group.maxSelections <= 1) {
-      const without = selected.filter((oid) => !group.options.some((o) => o.id === oid));
-      return [...without, optionId];
-    }
     return selected;
   }
   return [...selected, optionId];

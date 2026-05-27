@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  canSelectModifierOption,
   effectiveMaxSelections,
   MULTIPLE_MODIFIER_MAX,
   normalizeModifierGroup,
@@ -53,6 +54,13 @@ describe("toggleModifierOption", () => {
     let selected = toggleModifierOption([], "a", g);
     selected = toggleModifierOption(selected, "b", g);
     expect(selected).toEqual(["b"]);
+  });
+});
+
+describe("canSelectModifierOption", () => {
+  it("keeps alternative options clickable for single-select groups", () => {
+    const g = normalizeModifierGroup(group(1, true, ["a", "b"]));
+    expect(canSelectModifierOption(g, ["a"], "b")).toBe(true);
   });
 });
 

@@ -41,24 +41,6 @@ export async function POST(request: Request) {
       where: { tenantId: tenant.id },
     });
 
-    const result = await createOrder({
-      tenantId: tenant.id,
-      fulfillment: body.fulfillment,
-      customerName: body.customerName,
-      customerPhone: body.customerPhone,
-      customerEmail: body.customerEmail || undefined,
-      customerAddress: body.customerAddress,
-      notes: body.notes,
-      timeSlotInstanceId: body.timeSlotInstanceId,
-      cart,
-      minOrderCents: settings?.minOrderCents ?? 0,
-    });
-
-    if (!result.ok) {
-      const status = result.reason === "min_order" ? 400 : 409;
-      return NextResponse.json(result, { status });
-    }
-
     const paymentSetup = await getPaymentSetup(tenant.id);
     const wantsPayOnline = body.payOnline || settings?.requireOnlinePayment;
 
@@ -79,6 +61,26 @@ export async function POST(request: Request) {
       settings?.onlinePaymentsEnabled &&
       settings.paymentProvider !== "MANUAL";
 
+    const result = await createOrder({
+      tenantId: tenant.id,
+      fulfillment: body.fulfillment,
+      customerName: body.customerName,
+      customerPhone: body.customerPhone,
+      customerEmail: body.customerEmail || undefined,
+      customerAddress: body.customerAddress,
+      notes: body.notes,
+      timeSlotInstanceId: body.timeSlotInstanceId,
+      cart,
+      minOrderCents: settings?.minOrderCents ?? 0,
+      initialPaymentStatus: payOnline ? "PENDING" : "PAID",
+      paymentProvider: payOnline ? settings.paymentProvider.toLowerCase() : "manual",
+    });
+
+    if (!result.ok) {
+      const status = result.reason === "min_order" ? 400 : 409;
+      return NextResponse.json(result, { status });
+    }
+
     if (payOnline && settings) {
       const requestOrigin = new URL(request.url).origin;
       const baseUrl = getPublicAppUrl(requestOrigin);
@@ -95,7 +97,6 @@ export async function POST(request: Request) {
         await prisma.payment.update({
           where: { orderId: result.orderId },
           data: {
-            provider: settings.paymentProvider.toLowerCase(),
             providerRef: payment.providerRef,
           },
         });

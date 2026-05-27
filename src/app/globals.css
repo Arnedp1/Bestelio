@@ -154,6 +154,11 @@ body {
   box-shadow: 0 20px 48px rgba(28, 25, 23, 0.18);
 }
 
+.storefront-popup-panel-kiosk {
+  max-width: min(92vw, 70rem);
+  max-height: 92vh;
+}
+
 @media (min-width: 480px) {
   .storefront-popup-panel {
     border-radius: 1rem;

@@ -17,6 +17,8 @@
     "setup": "docker compose up db -d && node scripts/setup-db.mjs",
     "start:local": "powershell -ExecutionPolicy Bypass -File scripts/start-local.ps1",
     "verify:mollie": "node scripts/verify-mollie-key.mjs",
+    "qz:setup-cert": "node scripts/setup-qz-cert.mjs",
+    "print:agent": "cd scripts/print-agent && npm install && npm start",
     "postinstall": "prisma generate"
   },
   "dependencies": {
@@ -40,10 +42,14 @@
     "eslint": "^9",
     "eslint-config-next": "16.2.6",
     "prisma": "^6.19.3",
+    "selfsigned": "^5.5.0",
     "tailwindcss": "^4",
     "tsx": "^4.22.3",
     "typescript": "^5",
     "vitest": "^3.2.4"
+  },
+  "overrides": {
+    "postcss": "^8.5.10"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"

@@ -1,4 +1,4 @@
-import { FulfillmentType } from "@prisma/client";
+import { FulfillmentType, OrderStatus } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/admin/session";
 import { ensureSlotInstancesForDate } from "@/lib/slots/availability";
@@ -43,11 +43,42 @@ export default async function AdminSlotsPage() {
       orderBy: { startsAt: "asc" },
     }),
   ]);
+  const slotIds = instances.map((row) => row.id);
+  const revenueBySlot =
+    slotIds.length === 0
+      ? new Map<string, number>()
+      : new Map(
+          (
+            await prisma.order.groupBy({
+              by: ["timeSlotInstanceId"],
+              where: {
+                tenantId,
+                timeSlotInstanceId: { in: slotIds },
+                status: { not: OrderStatus.CANCELLED },
+              },
+              _sum: { totalCents: true },
+            })
+          )
+            .filter((row) => row.timeSlotInstanceId)
+            .map((row) => [row.timeSlotInstanceId as string, row._sum.totalCents ?? 0])
+        );
 
   const pickupRules = rules.filter((r) => r.fulfillment === FulfillmentType.PICKUP);
   const deliveryRules = rules.filter((r) => r.fulfillment === FulfillmentType.DELIVERY);
-  const pickupToday = instances.filter((i) => i.fulfillment === FulfillmentType.PICKUP);
-  const deliveryToday = instances.filter((i) => i.fulfillment === FulfillmentType.DELIVERY);
+  const pickupToday = instances
+    .filter((i) => i.fulfillment === FulfillmentType.PICKUP)
+    .map((row) => ({
+      ...row,
+      maxRevenueCents: row.maxOrders,
+      bookedRevenueCents: revenueBySlot.get(row.id) ?? 0,
+    }));
+  const deliveryToday = instances
+    .filter((i) => i.fulfillment === FulfillmentType.DELIVERY)
+    .map((row) => ({
+      ...row,
+      maxRevenueCents: row.maxOrders,
+      bookedRevenueCents: revenueBySlot.get(row.id) ?? 0,
+    }));
 
   const dateLabel = today.toLocaleDateString("nl-BE", {
     weekday: "long",

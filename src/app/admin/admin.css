@@ -24,6 +24,12 @@
   .admin-content:has(.admin-slots-page) {
     max-width: min(80rem, calc(100vw - 18rem));
   }
+
+  .admin-content:has(.admin-orders-page) {
+    max-width: min(110rem, calc(100vw - 18rem));
+    height: calc(100dvh - 8.5rem);
+    overflow: hidden;
+  }
 }
 
 .admin-card {
@@ -104,6 +110,14 @@
   display: inline-block;
   width: 100%;
   text-align: right;
+}
+
+.admin-order-entry-nav {
+  scrollbar-width: thin;
+}
+
+.admin-order-entry-menu {
+  scroll-margin-top: 7rem;
 }
 
 .admin-overlay {
@@ -375,5 +389,103 @@
   50% {
     opacity: 0.75;
     transform: scaleY(0.85);
+  }
+}
+
+/* Bestelling ingave — kassa / POS */
+@media (min-width: 1024px) {
+  .admin-content:has(.admin-pos-kiosk) {
+    max-width: min(96rem, calc(100vw - 18rem));
+    height: calc(100dvh - 8.5rem);
+  }
+}
+
+.admin-pos-kiosk {
+  gap: 0.5rem;
+}
+
+.admin-pos-products {
+  align-content: flex-start;
+  justify-content: flex-start;
+  scrollbar-gutter: stable;
+  scrollbar-width: thin;
+}
+
+.admin-pos-products::-webkit-scrollbar {
+  width: 8px;
+}
+
+.admin-pos-products::-webkit-scrollbar-thumb {
+  background: rgba(234, 88, 12, 0.35);
+  border-radius: 999px;
+}
+
+.admin-pos-products::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.admin-pos-product-tile {
+  touch-action: manipulation;
+  border-radius: 0.5rem;
+  padding: 0.25rem;
+  transition: background 0.15s;
+}
+
+.admin-pos-product-tile:active {
+  background: #fff7ed;
+}
+
+.admin-pos-fulfillment-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  min-height: 4.5rem;
+  border-radius: 0.75rem;
+  border: 2px solid #e7e5e4;
+  background: #fafaf9;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: #44403c;
+  touch-action: manipulation;
+}
+
+.admin-pos-fulfillment-btn.is-active {
+  border-color: #ea580c;
+  background: #ea580c;
+  color: white;
+}
+
+.admin-pos-category-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  min-height: 3.75rem;
+  padding: 0.5rem 0.35rem;
+  border-radius: 0.5rem;
+  border: 2px solid #ea580c;
+  background: white;
+  color: #c2410c;
+  touch-action: manipulation;
+  transition: background 0.12s, color 0.12s;
+}
+
+.admin-pos-category-btn.is-active {
+  background: #ea580c;
+  color: white;
+  border-color: #ea580c;
+}
+
+.admin-pos-categories {
+  max-height: min(38vh, 14rem);
+  overflow-y: auto;
+}
+
+@media (min-width: 1280px) {
+  .admin-pos-categories {
+    max-height: min(32vh, 12rem);
   }
 }

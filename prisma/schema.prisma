@@ -87,6 +87,7 @@ model BusinessSettings {
   requireOnlinePayment   Boolean         @default(false)
   paymentProvider        PaymentProvider @default(MANUAL)
   mollieApiKey           String?
+  kitchenAutoPrintEnabled Boolean        @default(true)
 }
 
 model FeatureFlag {
@@ -255,6 +256,7 @@ model Order {
   updatedAt          DateTime         @updatedAt
   lines              OrderLine[]
   payment            Payment?
+  printJobs          PrintJob[]
 
   @@unique([tenantId, orderNumber])
   @@index([tenantId, status, createdAt])
@@ -294,4 +296,33 @@ model Payment {
   providerRef String?
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
+}
+
+enum PrintJobType {
+  KITCHEN
+  VAT_TICKET
+}
+
+enum PrintJobStatus {
+  PENDING
+  PRINTING
+  DONE
+  FAILED
+}
+
+model PrintJob {
+  id        String         @id @default(cuid())
+  tenantId  String
+  orderId   String
+  order     Order          @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  type      PrintJobType   @default(KITCHEN)
+  status    PrintJobStatus @default(PENDING)
+  payload   Json
+  attempts  Int            @default(0)
+  lastError String?
+  createdAt DateTime       @default(now())
+  printedAt DateTime?
+
+  @@index([tenantId, status, createdAt])
+  @@index([orderId])
 }
